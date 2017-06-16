@@ -90,4 +90,6 @@ def log(message):  # simple wrapper for logging to stdout on heroku
 
 
 if __name__ == '__main__':
+    log("VALIDATION TOKEN:: " + VALIDATION_TOKEN)
+    log("ACCESS TOKEN: " + PAGE_ACCESS_TOKEN)
     app.run(debug=True)
