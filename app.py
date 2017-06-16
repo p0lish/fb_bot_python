@@ -46,7 +46,7 @@ def webhook_post():
                     recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                     message_text = messaging_event["message"]["text"]  # the message's text
 
-                    send_message(sender_id, "roger that!")
+                    send_message(sender_id, "ECHO: " + message_text)
 
                 if messaging_event.get("delivery"):  # delivery confirmation
                     pass
@@ -78,7 +78,7 @@ def send_message(recipient_id, message_text):
             "text": message_text
         }
     })
-    r = requests.post("https://graph.facebook.com/v2.6/me/messages", params=params, headers=headers, data=data)
+    r = requests.post("https://graph.facebook.com/v2.6/me/messages", qs=params, headers=headers, data=data)
     if r.status_code != 200:
         log(r.status_code)
         log(r.text)
