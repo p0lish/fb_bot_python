@@ -18,18 +18,7 @@ PAGE_ACCESS_TOKEN = get_config_value('MESSENGER_PAGE_ACCESS_TOKEN', '')
 app = Flask(__name__)
 
 
-@app.route('/')
-def hello_world():
-    return 'Hello World!'
-
-
-@app.route('/webhook', methods=['GET', 'POST'])
-def webhook():
-    if request.method == 'GET':
-        return webhook_get()
-    elif request.method == 'POST':
-        return webhook_post()
-
+@app.route('/', methods=['GET'])
 def webhook_get():
     # when the endpoint is registered as a webhook, it must echo back
     #  the 'hub.challenge' value it receives in the query arguments
@@ -39,7 +28,7 @@ def webhook_get():
         return request.args["hub.challenge"], 200
     return "Hello world", 200
 
-
+@app.route('/', methods=['POST'])
 def webhook_post():
     # endpoint for processing incoming messaging events
 
@@ -89,7 +78,7 @@ def send_message(recipient_id, message_text):
             "text": message_text
         }
     })
-    r = requests.post("https://graph.facebook.com/v2.9/me/messages", params=params, headers=headers, data=data)
+    r = requests.post("https://graph.facebook.com/v2.6/me/messages", params=params, headers=headers, data=data)
     if r.status_code != 200:
         log(r.status_code)
         log(r.text)
