@@ -18,7 +18,8 @@ VALIDATION_TOKEN = get_config_value('MESSENGER_VALIDATION_TOKEN', '')
 PAGE_ACCESS_TOKEN = get_config_value('MESSENGER_PAGE_ACCESS_TOKEN', '')
 
 auto_messages = {
-    'welcome_message': 'Hi! Im Resrv. You can easily make reservations with my help. Please select your destionation.'
+    'welcome_message': 'Hi! Im Resrv. You can easily make reservations with my help. Please select your destionation.',
+    'not_implemented_function': 'Sorry but this function is not implemented yet.'
 }
 
 
@@ -79,10 +80,14 @@ def getstarted_function(recipient_id, message_data):
 
 def postback_event_handler(recipient_id, received_message):
     commands_dispatcher = {
-        'Get Started': getstarted_function
+        'GET_STARTED_PAYLOAD': getstarted_function
     }
     if received_message in commands_dispatcher:
         commands_dispatcher[received_message](recipient_id)
+    else:
+        message_data = simple_message_builder(auto_messages['not_implemented_function'])
+        send_message(recipient_id, message_data=message_data)
+
 
 
 def send_message(recipient_id, message_data):
