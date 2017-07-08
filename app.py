@@ -50,11 +50,10 @@ def webhook_post():
 
         for entry in data.get("entry", []):
             for messaging_event in entry.get("messaging", []):
+                sender_id = messaging_event["sender"]["id"]  # the facebook ID of the person sending you the message
                 if messaging_event.get("message"):  # someone sent us a message
 
-                    sender_id = messaging_event["sender"]["id"]  # the facebook ID of the person sending you the message
-                    recipient_id = messaging_event["recipient"][
-                        "id"]  # the recipient's ID, which should be your page's facebook ID
+                    recipient_id = messaging_event["recipient"]["id"]  # the recipient's ID, which should be your page's facebook ID
                     message_text = messaging_event["message"]["text"]  # the message's text
 
                     message_data = simple_message_builder(message_text)
@@ -67,7 +66,9 @@ def webhook_post():
                     pass
 
                 if messaging_event.get("postback"):  # user clicked/tapped "postback" button in earlier message
-                    postback_event_handler(sender_id, message_text)
+
+                    payload = messaging_event['postback'].get('payload', '')
+                    postback_event_handler(sender_id, payload)
     return "ok", 200
 
 def getstarted_function(recipient_id, message_data):
