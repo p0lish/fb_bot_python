@@ -4,6 +4,8 @@ from os import environ as env
 
 from flask import Flask, request, json
 
+from message_builders.message_builders import simple_message_builder
+
 
 def get_config_value(config_key, default_value):
     try:
@@ -17,6 +19,9 @@ VALIDATION_TOKEN = get_config_value('MESSENGER_VALIDATION_TOKEN', '')
 PAGE_ACCESS_TOKEN = get_config_value('MESSENGER_PAGE_ACCESS_TOKEN', '')
 
 app = Flask(__name__)
+
+
+
 
 
 @app.route('/', methods=['GET'])
@@ -48,7 +53,8 @@ def webhook_post():
                         "id"]  # the recipient's ID, which should be your page's facebook ID
                     message_text = messaging_event["message"]["text"]  # the message's text
 
-                    send_message(sender_id, "ECHO: " + message_text)
+                    message_data = simple_message_builder(message_text)
+                    send_message(sender_id, message_data)
 
                 if messaging_event.get("delivery"):  # delivery confirmation
                     pass
@@ -61,27 +67,18 @@ def webhook_post():
     return "ok", 200
 
 
-def send_message(recipient_id, message_text):
-    log("sending message to {recipient}: {text}".format(recipient=recipient_id, text=message_text))
+def send_message(recipient_id, message_data):
+    log("sending message to {recipient}: {message_data}".format(recipient=recipient_id, text=message_data))
 
-    params = {
-        "access_token": PAGE_ACCESS_TOKEN
-    }
-    headers = {
-        "Content-Type": "application/json"
-    }
-    data = json.dumps({
+    data = {
         "recipient": {
             "id": recipient_id
         },
-        "message": {
-            "text": message_text
-        }
-    })
-    r = requests.post("https://graph.facebook.com/v2.6/me/messages", params=params, headers=headers, data=data)
-    if r.status_code != 200:
-        log(r.status_code)
-        log(r.text)
+        "message": message_data
+    }
+    call_api(data)
+
+
 def send_image_message():
     pass
 def send_gif_message():
@@ -96,6 +93,8 @@ def send_quick_reply():
     pass
 def send_text_message():
     pass
+
+
 def call_api(message_data):
     log("sending message {message_data}".format(message_data))
 
@@ -105,23 +104,10 @@ def call_api(message_data):
     headers = {
         "Content-Type": "application/json"
     }
-    # data = json.dumps({
-    #     "recipient": {
-    #         "id": recipient_id
-    #     },
-    #     "message": {
-    #         "text": message_text
-    #     }
-    # })
-    r = requests.post("https://graph.facebook.com/v2.6/me/messages", params=params, headers=headers, data=message_data)
+    r = requests.post("https://graph.facebook.com/v2.6/me/messages", params=params, headers=headers, data=json.dumps(message_data))
     if r.status_code != 200:
         log(r.status_code)
         log(r.text)
-
-
-
-
-
 
 
 def log(message):  # simple wrapper for logging to stdout on heroku
