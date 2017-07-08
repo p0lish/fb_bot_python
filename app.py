@@ -18,7 +18,7 @@ VALIDATION_TOKEN = get_config_value('MESSENGER_VALIDATION_TOKEN', '')
 PAGE_ACCESS_TOKEN = get_config_value('MESSENGER_PAGE_ACCESS_TOKEN', '')
 
 auto_messages = {
-    'welcome_message': 'Hi! Im Resrv. You can easily make reservations with my help. Please select your destionation.',
+    'welcome_message': 'Hi! Im Resrv. You can easily make reservations with my help. Please select your destination.',
     'not_implemented_function': 'Sorry but this function is not implemented yet.'
 }
 
