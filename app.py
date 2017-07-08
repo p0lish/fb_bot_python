@@ -91,7 +91,7 @@ def postback_event_handler(recipient_id, received_message):
 
 
 def send_message(recipient_id, message_data):
-    log("sending message to {recipient}: {message_data}".format(recipient=recipient_id, text=message_data))
+    log("sending message to {recipient}: {text}".format(recipient=recipient_id, text=message_data))
 
     data = {
         "recipient": {
