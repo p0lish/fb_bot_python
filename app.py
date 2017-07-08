@@ -72,7 +72,7 @@ def webhook_post():
                     postback_event_handler(sender_id, payload)
     return "ok", 200
 
-def getstarted_function(recipient_id, message_data):
+def getstarted_function(recipient_id):
     message_data = simple_message_builder(auto_messages['welcome_message'])
     send_message(recipient_id, message_data)
 
@@ -83,7 +83,7 @@ def postback_event_handler(recipient_id, received_message):
         'GET_STARTED_PAYLOAD': getstarted_function
     }
     if received_message in commands_dispatcher:
-        commands_dispatcher[received_message](recipient_id)
+        commands_dispatcher[received_message](recipient_id, )
     else:
         message_data = simple_message_builder(auto_messages['not_implemented_function'])
         send_message(recipient_id, message_data=message_data)
