@@ -87,3 +87,23 @@ def generic_message_builder(
     attachment['payload'] = payload
     return result
 
+
+def button_message_builder(
+        text='',
+        buttons=None):
+    if buttons is None:
+        buttons = []
+    attachment = {}
+
+    result = {
+        'attachment': attachment
+    }
+
+    payload = {
+        'text': text,
+        "template_type": 'button',
+        'buttons': buttons
+    }
+    attachment['type'] = 'template'
+    attachment['payload'] = payload
+    return result

@@ -4,7 +4,8 @@ from os import environ as env
 
 from flask import Flask, request, json
 
-from message_builders.message_builders import simple_message_builder
+from message_builders.message_builders import simple_message_builder, generic_message_builder, button_message_builder, \
+    postback_button_builder
 
 
 def get_config_value(config_key, default_value):
@@ -73,7 +74,9 @@ def webhook_post():
     return "ok", 200
 
 def getstarted_function(recipient_id):
-    message_data = simple_message_builder(auto_messages['welcome_message'])
+
+    buttons = [postback_button_builder(title='Start reservation', payload='START_RESERVATION')]
+    message_data = button_message_builder(auto_messages['welcome_message'], buttons=buttons)
     send_message(recipient_id, message_data)
 
 
