@@ -118,7 +118,7 @@ def send_text_message():
 
 
 def call_api(message_data):
-    log("sending message {message_data}".format(message_data))
+    log("sending message {}".format(message_data))
 
     params = {
         "access_token": PAGE_ACCESS_TOKEN
