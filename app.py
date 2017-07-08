@@ -3,7 +3,7 @@ import sys
 from os import environ as env
 
 from flask import Flask, request, json
-
+from webview.views import WEB
 
 def get_config_value(config_key, default_value):
     try:
@@ -16,6 +16,7 @@ VALIDATION_TOKEN = get_config_value('MESSENGER_VALIDATION_TOKEN', '')
 PAGE_ACCESS_TOKEN = get_config_value('MESSENGER_PAGE_ACCESS_TOKEN', '')
 
 app = Flask(__name__)
+app.register_blueprint(WEB)
 
 
 @app.route('/', methods=['GET'])
