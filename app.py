@@ -5,6 +5,7 @@ from os import environ as env
 from flask import Flask, request, json
 
 from message_builders.message_builders import simple_message_builder
+from message_builders.postback_handlers import getstarted_function
 
 
 def get_config_value(config_key, default_value):
@@ -14,9 +15,13 @@ def get_config_value(config_key, default_value):
         return default_value
     return result
 
-
 VALIDATION_TOKEN = get_config_value('MESSENGER_VALIDATION_TOKEN', '')
 PAGE_ACCESS_TOKEN = get_config_value('MESSENGER_PAGE_ACCESS_TOKEN', '')
+
+auto_messages = {
+    'welcome_message': 'Hi! Im Resrv. You can easily make reservations with my help. Please select your destionation.'
+}
+
 
 app = Flask(__name__)
 
@@ -63,8 +68,21 @@ def webhook_post():
                     pass
 
                 if messaging_event.get("postback"):  # user clicked/tapped "postback" button in earlier message
-                    pass
+                    postback_event_handler(sender_id, message_text)
     return "ok", 200
+
+def getstarted_function(recipient_id, message_data):
+    message_data = simple_message_builder(auto_messages['welcome_message'])
+    send_message(recipient_id, message_data)
+
+
+
+def postback_event_handler(recipient_id, received_message):
+    commands_dispatcher = {
+        'Get Started': getstarted_function
+    }
+    if received_message in commands_dispatcher:
+        commands_dispatcher[received_message](recipient_id)
 
 
 def send_message(recipient_id, message_data):
@@ -77,7 +95,6 @@ def send_message(recipient_id, message_data):
         "message": message_data
     }
     call_api(data)
-
 
 def send_image_message():
     pass
