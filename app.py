@@ -5,7 +5,6 @@ from os import environ as env
 from flask import Flask, request, json
 
 from message_builders.message_builders import simple_message_builder
-from message_builders.postback_handlers import getstarted_function
 
 
 def get_config_value(config_key, default_value):
