@@ -3,10 +3,10 @@ import sys
 from os import environ as env
 
 from flask import Flask, request, json
+from webview.views import WEB
 
 from message_builders.message_builders import simple_message_builder, generic_message_builder, button_message_builder, \
     postback_button_builder
-
 
 def get_config_value(config_key, default_value):
     try:
@@ -25,6 +25,7 @@ auto_messages = {
 
 
 app = Flask(__name__)
+app.register_blueprint(WEB)
 
 
 
